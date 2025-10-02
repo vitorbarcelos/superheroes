@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: .
+      target: builder
+    container_name: superheroes
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/superheroes?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    volumes:
+      - ./:/app/
+    command: mvn spring-boot:run
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.1
+    container_name: superheroes_db
+    restart: always
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: superheroes
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql

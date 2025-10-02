@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: super-heroes
+  profiles:
+    default: prd
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    url: /openapi.yaml
+    path: /swagger-ui.html
+    display-request-duration: true

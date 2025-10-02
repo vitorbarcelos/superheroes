@@ -1,0 +1,478 @@
+openapi: 3.0.1
+
+info:
+  title: Superheroes API
+  description: >
+    API para gerenciamento de super-heróis e superpoderes.
+    Permite criar, consultar, atualizar e remover heróis e seus superpoderes.
+  contact:
+    name: Equipe de Desenvolvimento
+    email: vitor@barcelos.dev.br
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Ambiente de Desenvolvimento
+
+tags:
+  - name: Heróis
+    description: Endpoints para gerenciamento de super-heróis.
+  - name: Superpoderes
+    description: Endpoints para gerenciamento de superpoderes.
+
+paths:
+  /heroes:
+    post:
+      tags: [ Heróis ]
+      summary: Criar novo herói
+      description: Cria um novo super-herói no sistema com seus dados básicos e superpoderes associados.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHeroDto'
+            examples:
+              batman:
+                summary: Batman
+                value:
+                  name: "Bruce Wayne"
+                  heroName: "Batman"
+                  height: 1.88
+                  weight: 95.0
+                  birthDate: "1939-05-01"
+                  superpowers: [ 1, 2, 3 ]
+      responses:
+        '201':
+          description: Herói criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeroOutputDto'
+        '400':
+          description: Dados inválidos fornecidos
+        '409':
+          description: Nome de herói já existe no sistema
+    get:
+      tags: [ Heróis ]
+      summary: Listar heróis
+      description: Retorna uma lista de todos os super-heróis cadastrados no sistema.
+      responses:
+        '200':
+          description: Lista de heróis retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HeroOutputDto'
+
+  /heroes/{id}:
+    get:
+      tags: [ Heróis ]
+      summary: Consultar herói por ID
+      description: Recupera os detalhes completos de um super-herói específico pelo seu identificador único.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            example: 1
+      responses:
+        '200':
+          description: Herói encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeroOutputDto'
+        '404':
+          description: Herói não encontrado
+    put:
+      tags: [ Heróis ]
+      summary: Atualizar herói
+      description: Atualiza todas as informações de um super-herói existente.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHeroDto'
+            examples:
+              batman_update:
+                summary: Batman
+                value:
+                  name: "Bruce Wayne"
+                  heroName: "Batman"
+                  height: 1.88
+                  weight: 95.5
+                  birthDate: "1939-05-01"
+                  superpowers: [ 1, 2, 3, 4 ]
+      responses:
+        '200':
+          description: Herói atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeroOutputDto'
+        '400':
+          description: Dados inválidos fornecidos
+        '404':
+          description: Herói não encontrado
+        '409':
+          description: Nome de herói já existe no sistema
+    delete:
+      tags: [ Heróis ]
+      summary: Remover herói
+      description: Remove permanentemente um super-herói do sistema.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            example: 1
+      responses:
+        '204':
+          description: Herói removido com sucesso
+        '404':
+          description: Herói não encontrado
+
+  /superpowers:
+    post:
+      tags: [ Superpoderes ]
+      summary: Criar novo superpoder
+      description: Cadastra um novo tipo de superpoder que pode ser associado aos heróis.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSuperpowerDto'
+            examples:
+              super_forca:
+                summary: Super Força
+                value:
+                  name: "Super Força"
+                  description: "Capacidade de levantar objetos extremamente pesados"
+      responses:
+        '201':
+          description: Superpoder criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperpowerOutputDto'
+        '400':
+          description: Dados inválidos fornecidos
+    get:
+      tags: [ Superpoderes ]
+      summary: Listar superpoderes
+      description: Retorna uma lista de todos os superpoderes disponíveis no sistema.
+      responses:
+        '200':
+          description: Lista de superpoderes retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SuperpowerOutputDto'
+
+  /superpowers/{id}:
+    get:
+      tags: [ Superpoderes ]
+      summary: Consultar superpoder por ID
+      description: Recupera os detalhes de um superpoder específico pelo seu identificador único.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            example: 1
+      responses:
+        '200':
+          description: Superpoder encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperpowerOutputDto'
+        '404':
+          description: Superpoder não encontrado
+    put:
+      tags: [ Superpoderes ]
+      summary: Atualizar superpoder
+      description: Atualiza as informações de um superpoder existente.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSuperpowerDto'
+            examples:
+              super_forca_update:
+                summary: Super Força
+                value:
+                  name: "Super Força Avançada"
+                  description: "Capacidade de levantar objetos com peso superior a 100 toneladas"
+      responses:
+        '200':
+          description: Superpoder atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuperpowerOutputDto'
+        '400':
+          description: Dados inválidos fornecidos
+        '404':
+          description: Superpoder não encontrado
+    delete:
+      tags: [ Superpoderes ]
+      summary: Remover superpoder
+      description: Remove permanentemente um superpoder do sistema.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            example: 1
+      responses:
+        '204':
+          description: Superpoder removido com sucesso
+        '404':
+          description: Superpoder não encontrado
+
+components:
+  schemas:
+    CreateHeroDto:
+      type: object
+      required:
+        - name
+        - heroName
+        - height
+        - weight
+        - birthDate
+        - superpowers
+      properties:
+        name:
+          type: string
+          description: Nome civil do herói
+          maxLength: 120
+          example: "Bruce Wayne"
+        heroName:
+          type: string
+          description: Nome de super-herói
+          maxLength: 120
+          example: "Batman"
+        height:
+          type: number
+          format: double
+          description: Altura em metros
+          minimum: 0.1
+          maximum: 3.0
+          example: 1.88
+        weight:
+          type: number
+          format: double
+          description: Peso em quilogramas
+          minimum: 1.0
+          maximum: 1000.0
+          example: 95.0
+        birthDate:
+          type: string
+          format: date
+          description: Data de nascimento no formato YYYY-MM-DD
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+          example: "1939-05-01"
+        superpowers:
+          type: array
+          description: Lista de IDs dos superpoderes associados
+          minItems: 1
+          items:
+            type: integer
+            format: int64
+            minimum: 1
+          example: [ 1, 2, 3 ]
+
+    UpdateHeroDto:
+      type: object
+      required:
+        - name
+        - heroName
+        - height
+        - weight
+        - birthDate
+        - superpowers
+      properties:
+        name:
+          type: string
+          description: Nome civil do herói
+          maxLength: 120
+          example: "Bruce Wayne"
+        heroName:
+          type: string
+          description: Nome de super-herói
+          maxLength: 120
+          example: "Batman"
+        height:
+          type: number
+          format: double
+          description: Altura em metros
+          minimum: 0.1
+          maximum: 3.0
+          example: 1.88
+        weight:
+          type: number
+          format: double
+          description: Peso em quilogramas
+          minimum: 1.0
+          maximum: 1000.0
+          example: 95.5
+        birthDate:
+          type: string
+          format: date
+          description: Data de nascimento no formato YYYY-MM-DD
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+          example: "1939-05-01"
+        superpowers:
+          type: array
+          description: Lista de IDs dos superpoderes associados
+          minItems: 1
+          items:
+            type: integer
+            format: int64
+            minimum: 1
+          example: [ 1, 2, 3, 4 ]
+
+    HeroOutputDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identificador único do herói
+          example: 1
+        name:
+          type: string
+          description: Nome civil do herói
+          example: "Bruce Wayne"
+        heroName:
+          type: string
+          description: Nome de super-herói
+          example: "Batman"
+        height:
+          type: number
+          format: double
+          description: Altura em metros
+          example: 1.88
+        weight:
+          type: number
+          format: double
+          description: Peso em quilogramas
+          example: 95.0
+        birthDate:
+          type: string
+          format: date
+          description: Data de nascimento
+          example: "1939-05-01"
+        superpowers:
+          type: array
+          description: Lista de superpoderes associados
+          items:
+            $ref: '#/components/schemas/SuperpowerOutputDto'
+
+    CreateSuperpowerDto:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Nome do superpoder
+          maxLength: 50
+          example: "Super Força"
+        description:
+          type: string
+          description: Descrição detalhada do superpoder
+          maxLength: 250
+          example: "Capacidade de levantar objetos extremamente pesados"
+
+    UpdateSuperpowerDto:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Nome do superpoder
+          maxLength: 50
+          example: "Super Força Avançada"
+        description:
+          type: string
+          description: Descrição detalhada do superpoder
+          maxLength: 250
+          example: "Capacidade de levantar objetos com peso superior a 100 toneladas"
+
+    SuperpowerOutputDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identificador único do superpoder
+          example: 1
+        name:
+          type: string
+          description: Nome do superpoder
+          example: "Super Força"
+        description:
+          type: string
+          description: Descrição detalhada do superpoder
+          example: "Capacidade de levantar objetos extremamente pesados"
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Data e hora do erro
+        status:
+          type: integer
+          description: Código HTTP do erro
+        error:
+          type: string
+          description: Tipo do erro
+        message:
+          type: string
+          description: Mensagem descritiva do erro
+        path:
+          type: string
+          description: URL que causou o erro
