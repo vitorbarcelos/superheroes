@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: super-heroes
+  profiles:
+    default: prd
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    operations-sorter: method
+    display-request-duration: true
+  documentation:
+    swagger:
+      v2:
+        api:
+          info:
+            title: Super Heroes API
+            description: "API respons&#xE1;vel pelo cadastro, listagem e gerenciamento de super-her&#xF3;is e seus superpoderes."
+            contact:
+              name: Vitor Barcelos
+              email: vitor@barcelos.dev.br
+            version: 1.0.0
+            license:
+              name: MIT
+              url: https://opensource.org/licenses/MIT

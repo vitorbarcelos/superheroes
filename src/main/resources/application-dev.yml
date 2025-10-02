@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    username: user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://db:3306/superheroes?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
